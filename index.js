@@ -12,6 +12,7 @@ app.get('/',(req,res)=>{
 app.use('/room',require('./routes/roomRoutes'));
 app.use('/user',require('./routes/userRoutes') );
 
+
 mongoConnect(()=>{
     app.listen(5000,()=>console.log('Server listerning to 5000'))
 })
