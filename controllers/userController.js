@@ -87,7 +87,20 @@ exports.getBookings = (req,res)=>{
     .catch(err=>res.send({message:"error occured"}))
 }
 
+exports.checkin = (req,res)=>{
+    Room.changeStatus(req.room_id)
+    .then(_=>res.send({message:"room allocated"}))
+    .catch(err=>{
+        console.log(err)
+        res.status({message:"error occured"})
+    })
+}
 
-
-
-
+exports.checkout = (req,res)=>{
+    Room.changeStatusFree(req.room_id)
+    .then(_=>res.send({message:"Room marked avaialble"}))
+    .catch(err=>{
+        console.log(err)
+        res.status({message:"error occured"})
+    })
+}

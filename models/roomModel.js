@@ -27,6 +27,14 @@ module.exports = class Room {
       .then(_=>_)
   }
 
+  static changeStatusFree(r_id){
+    const db = getDb();
+    return db
+      .collection("rooms")
+      .updateOne({_id:new mongodb.ObjectId(r_id)},{$set:{status:"Available"}})
+      .then(_=>_)
+  }
+
   //add future bookings made for room
   static addUpComingBook(r_id,booking){
     const db = getDb();
@@ -43,10 +51,35 @@ module.exports = class Room {
       .collection("rooms")
       .find()
       .toArray()
+      .then(result=>{
+        const updated_result= result.map(room=>{
+          if(room.upcoming_bookings.length==0){
+            return room
+          }
+          else {
+            room.upcoming_bookings.map(date=>{
+              const indate = date.split(' ');
+              const isToday = (someDate) => {
+                const today = new Date()
+                return someDate.getDate() == today.getDate() &&
+                 someDate.getMonth() == today.getMonth() &&
+                 someDate.getFullYear() == today.getFullYear()
+            }
+            if(isToday(new Date(indate[0]))){
+              room.status="Booked"
+              Room.changeStatus(room._id)
+            }
+            })
+            return room
+          }
+        })
+        return updated_result
+      })
       .then((rooms) => cb(rooms))
       .catch((err) => {
         console.log(err);
         cb("error occured");
       });
   }
+
 };
