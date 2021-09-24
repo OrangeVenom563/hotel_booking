@@ -27,12 +27,15 @@ module.exports = class Room {
       .then(_=>_)
   }
 
-  static changeStatusFree(r_id){
+  static changeStatusFree(r_id,date){
     const db = getDb();
     return db
       .collection("rooms")
-      .updateOne({_id:new mongodb.ObjectId(r_id)},{$set:{status:"Available"}})
-      .then(_=>_)
+      .updateOne({_id:new mongodb.ObjectId(r_id)},{$set:{status:"Available"},$pull:{upcoming_bookings:date}})
+      .then(res=>{
+        console.log(res)
+        return res
+      })
   }
 
   //add future bookings made for room

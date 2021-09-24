@@ -88,7 +88,7 @@ exports.getBookings = (req,res)=>{
 }
 
 exports.checkin = (req,res)=>{
-    Room.changeStatus(req.room_id)
+    Room.changeStatus(req.body.room_id)
     .then(_=>res.send({message:"room allocated"}))
     .catch(err=>{
         console.log(err)
@@ -97,7 +97,7 @@ exports.checkin = (req,res)=>{
 }
 
 exports.checkout = (req,res)=>{
-    Room.changeStatusFree(req.room_id)
+    Room.changeStatusFree(req.body.room_id,req.body.date)
     .then(_=>res.send({message:"Room marked avaialble"}))
     .catch(err=>{
         console.log(err)
